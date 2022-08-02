@@ -3,14 +3,12 @@
 const gamePattern = [];
 const btnColors = ["red", "blue", "green", "yellow"];
 const userClickedPattern = [];
-let classObj = document.getElementsByClassName("btn");
 
-for (let i = 0; i < classObj.length; i++) {
-  classObj[i].addEventListener("click", function (e) {
-    let elementId = e.target.id;
-    userClickedPattern.push(elementId);
-  });
-}
+const playSound = function (name) {
+  var audio = new Audio(`sounds/${name}.mp3`);
+  audio.play;
+};
+
 const fadeIn = function (id) {
   const fade = document.getElementById(id);
   let opacity = 0;
@@ -24,14 +22,23 @@ const fadeIn = function (id) {
   }, 200);
 };
 
+let classObj = document.getElementsByClassName("btn");
+for (let i = 0; i < classObj.length; i++) {
+  classObj[i].addEventListener("click", function (e) {
+    let elementId = e.target.id;
+    userClickedPattern.push(elementId);
+    fadeIn(elementId);
+    playSound(elementId);
+  });
+}
+
 const nextSequence = function () {
   let randomNumber = Math.trunc(Math.random() * 4);
   let randomColorChosen = btnColors[randomNumber];
   gamePattern.push(randomColorChosen);
   let randomColorID = document.getElementById(randomColorChosen).id;
   fadeIn(randomColorID);
-  var audio = new Audio(`sounds/${randomColorID}.mp3`);
-  audio.play;
+  playSound(randomColorID);
 };
 
 nextSequence();
