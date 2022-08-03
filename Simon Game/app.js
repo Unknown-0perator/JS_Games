@@ -1,11 +1,15 @@
 "use strict";
 
-const gamePattern = [];
 const btnColors = ["red", "blue", "green", "yellow"];
-const userClickedPattern = [];
+
+let userClickedPattern = [];
+let gamePattern = [];
+
+let level = 0;
+let isStarted = false;
 
 const playSound = function (name) {
-  var audio = new Audio(`sounds/${name}.mp3`);
+  let audio = new Audio(`sounds/${name}.mp3`);
   audio.play;
 };
 
@@ -22,17 +26,17 @@ const fadeIn = function (id) {
   }, 200);
 };
 
-let classObj = document.getElementsByClassName("btn");
-for (let i = 0; i < classObj.length; i++) {
-  classObj[i].addEventListener("click", function (e) {
-    let elementId = e.target.id;
-    userClickedPattern.push(elementId);
-    fadeIn(elementId);
-    playSound(elementId);
-  });
-}
+const startOver = function () {
+  level = 0;
+  gamePattern = [];
+  isStarted = false;
+};
 
 const nextSequence = function () {
+  userClickedPattern = [];
+  level++;
+  document.getElementById("level-title").textContent = `Level ${level}`;
+
   let randomNumber = Math.trunc(Math.random() * 4);
   let randomColorChosen = btnColors[randomNumber];
   gamePattern.push(randomColorChosen);
@@ -41,4 +45,42 @@ const nextSequence = function () {
   playSound(randomColorID);
 };
 
-nextSequence();
+function checkAnswer(currentLevel) {
+  if (gamePattern[currentLevel] === userClickedPattern[currentLevel]) {
+    console.log("success");
+    if (userClickedPattern.length === gamePattern.length) {
+      setTimeout(function () {
+        nextSequence();
+      }, 1000);
+    }
+  } else {
+    console.log("wrong");
+    playSound("wrong");
+    document.body.classList.add("game-over");
+    setTimeout(function () {
+      document.body.classList.remove("game-over");
+    }, 200);
+    document.getElementById("level-title").textContent =
+      "Game Over, Press Any Key to Restart";
+    startOver();
+  }
+}
+
+let classObj = document.getElementsByClassName("btn");
+for (let i = 0; i < classObj.length; i++) {
+  classObj[i].addEventListener("click", function (e) {
+    let elementId = e.target.id;
+    userClickedPattern.push(elementId);
+    fadeIn(elementId);
+    playSound(elementId);
+    checkAnswer(userClickedPattern.length - 1);
+  });
+}
+
+document.onkeypress = function () {
+  if (!isStarted) {
+    document.getElementById("level-title").textContent = `Level ${level}`;
+    nextSequence();
+    isStarted = true;
+  }
+};
