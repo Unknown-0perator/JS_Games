@@ -7,7 +7,7 @@ const labelSumInterest = document.querySelector(".summary__value--interest");
 const labelTimer = document.querySelector(".timer");
 
 const containerApp = document.querySelector(".app");
-const containerMovements = document.querySelector(".movements");
+const containerTransactions = document.querySelector(".transactions");
 
 const btnLogin = document.querySelector(".login__btn");
 const btnTransfer = document.querySelector(".form__btn--transfer");
@@ -22,3 +22,49 @@ const inputTransferAmount = document.querySelector(".form__input--amount");
 const inputLoanAmount = document.querySelector(".form__input--loan-amount");
 const inputCloseUsername = document.querySelector(".form__input--user");
 const inputClosePin = document.querySelector(".form__input--pin");
+
+//Data
+const account1 = {
+  owner: "Ahmad Rashid",
+  transactions: [100, 200, -900, -3000, 1650, -1403, 4070, 107],
+  interestRate: 12,
+  pin: 1234,
+};
+
+const account2 = {
+  owner: "Unknown 0perator",
+  transactions: [550, 370, -190, -690, -4321, -7000, 10500, -3900],
+  interestRate: 7.5,
+  pin: 0000,
+};
+
+const account3 = {
+  owner: "Ahmad",
+  transactions: [490, -700, -3200, 4109, -2035, 9850, 4000, -4860],
+  interestRate: 1.8,
+  pin: 1199,
+};
+
+const account4 = {
+  owner: "Rashid",
+  transactions: [620, -1600, 980, 1205, 930],
+  interestRate: 1.7,
+  pin: 7890,
+};
+
+const displayTransaction = function (transactions) {
+  containerTransactions.innerHTML = "";
+  transactions.forEach(function (transaction, index) {
+    const type = transaction > 0 ? "deposit" : "withdrawal";
+    const html = `
+    <div class="transactions__row">
+                <div class="transactions__type transactions__type--${type}">${
+      index + 1
+    } ${type}</div>
+                <div class="transactions__value">${transaction}</div>
+            </div>
+    `;
+    containerTransactions.insertAdjacentHTML("afterbegin", html);
+  });
+};
+displayTransaction(account1.transactions);
