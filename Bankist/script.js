@@ -52,6 +52,8 @@ const account4 = {
   pin: 7890,
 };
 
+const accounts = [account1, account2, account3, account4];
+
 const displayTransaction = function (transactions) {
   containerTransactions.innerHTML = "";
   transactions.forEach(function (transaction, index) {
@@ -68,3 +70,15 @@ const displayTransaction = function (transactions) {
   });
 };
 displayTransaction(account1.transactions);
+
+const createUsernames = function (accs) {
+  accs.forEach(function (acc) {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(" ")
+      .map((name) => name[0])
+      .join("");
+  });
+};
+createUsernames(accounts);
+console.log(accounts);
