@@ -71,6 +71,15 @@ const displayTransaction = function (transactions) {
 };
 displayTransaction(account1.transactions);
 
+const calcDisplayBalance = function (transactions) {
+  const balance = transactions.reduce(
+    (acc, transaction) => acc + transaction,
+    0
+  );
+  labelBalance.textContent = `${balance} $`;
+};
+calcDisplayBalance(account1.transactions);
+
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
     acc.username = acc.owner
