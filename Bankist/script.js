@@ -127,10 +127,11 @@ btnLogin.addEventListener("click", function (e) {
   currentAccount = accounts.find(
     (acc) => acc.username === inputLoginUsername.value
   );
-  console.log(currentAccount);
   if (currentAccount?.pin === Number(inputLoginPin.value)) {
     labelWelcome.textContent = `Welcome, ${currentAccount.owner.split(" ")[0]}`;
     containerApp.style.opacity = 1;
+    inputLoginUsername.value = inputLoginPin.value = "";
+    inputLoginPin.blur();
     displayTransaction(currentAccount.transactions);
     calcDisplayBalance(currentAccount.transactions);
     calcDisplaySummary(
