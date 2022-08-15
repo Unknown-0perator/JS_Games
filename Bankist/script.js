@@ -63,7 +63,7 @@ const displayTransaction = function (transactions) {
                 <div class="transactions__type transactions__type--${type}">${
       index + 1
     } ${type}</div>
-                <div class="transactions__value">${transaction}</div>
+                <div class="transactions__value">${transaction}$</div>
             </div>
     `;
     containerTransactions.insertAdjacentHTML("afterbegin", html);
@@ -76,9 +76,44 @@ const calcDisplayBalance = function (transactions) {
     (acc, transaction) => acc + transaction,
     0
   );
-  labelBalance.textContent = `${balance} $`;
+  labelBalance.textContent = `${balance}$`;
 };
 calcDisplayBalance(account1.transactions);
+
+const calcDisplaySummary = function (transactions, interestRate) {
+  const incomes = transactions
+    .filter(function (transaction) {
+      return transaction > 0;
+    })
+    .reduce(function (total, transaction) {
+      return total + transaction;
+    }, 0);
+  labelSumIn.textContent = `${incomes}$`;
+  const outcomes = transactions
+    .filter(function (transaction) {
+      return transaction < 0;
+    })
+    .reduce(function (total, transaction) {
+      return total + transaction;
+    }, 0);
+  labelSumOut.textContent = `${Math.abs(outcomes)}$`;
+  const interest = transactions
+    .filter(function (transaction) {
+      return transaction > 0;
+    })
+    .map(function (transaction) {
+      return (transaction * interestRate) / 100;
+    })
+    .filter(function (transaction) {
+      return transaction >= 1;
+    })
+    .reduce(function (total, transaction) {
+      return total + transaction;
+    });
+  labelSumInterest.textContent = `${interest}$`;
+};
+
+calcDisplaySummary(account1.transactions, account1.interestRate);
 
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
