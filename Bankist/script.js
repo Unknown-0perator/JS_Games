@@ -1,4 +1,4 @@
-const labelWelcome = document.querySelector(".welcome");
+const labelWelcome = document.querySelector(".title");
 const labelDate = document.querySelector(".date");
 const labelBalance = document.querySelector(".balance__value");
 const labelSumIn = document.querySelector(".summary__value--in");
@@ -35,7 +35,7 @@ const account2 = {
   owner: "Unknown 0perator",
   transactions: [550, 370, -190, -690, -4321, -7000, 10500, -3900],
   interestRate: 7.5,
-  pin: 0000,
+  pin: 1224,
 };
 
 const account3 = {
@@ -69,7 +69,6 @@ const displayTransaction = function (transactions) {
     containerTransactions.insertAdjacentHTML("afterbegin", html);
   });
 };
-displayTransaction(account1.transactions);
 
 const calcDisplayBalance = function (transactions) {
   const balance = transactions.reduce(
@@ -78,7 +77,6 @@ const calcDisplayBalance = function (transactions) {
   );
   labelBalance.textContent = `${balance}$`;
 };
-calcDisplayBalance(account1.transactions);
 
 const calcDisplaySummary = function (transactions, interestRate) {
   const incomes = transactions
@@ -113,8 +111,6 @@ const calcDisplaySummary = function (transactions, interestRate) {
   labelSumInterest.textContent = `${interest}$`;
 };
 
-calcDisplaySummary(account1.transactions, account1.interestRate);
-
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
     acc.username = acc.owner
@@ -125,4 +121,21 @@ const createUsernames = function (accs) {
   });
 };
 createUsernames(accounts);
-console.log(accounts);
+
+btnLogin.addEventListener("click", function (e) {
+  e.preventDefault();
+  currentAccount = accounts.find(
+    (acc) => acc.username === inputLoginUsername.value
+  );
+  console.log(currentAccount);
+  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+    labelWelcome.textContent = `Welcome, ${currentAccount.owner.split(" ")[0]}`;
+    containerApp.style.opacity = 1;
+    displayTransaction(currentAccount.transactions);
+    calcDisplayBalance(currentAccount.transactions);
+    calcDisplaySummary(
+      currentAccount.transactions,
+      currentAccount.interestRate
+    );
+  }
+});
