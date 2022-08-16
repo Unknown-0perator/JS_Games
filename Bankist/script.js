@@ -140,3 +140,26 @@ btnLogin.addEventListener("click", function (e) {
     );
   }
 });
+
+btnTransfer.addEventListener("click", function (e) {
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const receiverAccount = accounts.find(
+    (acc) => acc.username === inputTransferTo.value
+  );
+  console.log(amount, receiverAccount);
+  if (
+    amount > 0 &&
+    receiverAccount &&
+    receiverAccount?.username !== currentAccount.username
+  ) {
+    currentAccount.transactions.push(-amount);
+    receiverAccount.transactions.push(amount);
+    displayTransaction(currentAccount.transactions);
+    calcDisplayBalance(currentAccount.transactions);
+    calcDisplaySummary(
+      currentAccount.transactions,
+      currentAccount.interestRate
+    );
+  }
+});
