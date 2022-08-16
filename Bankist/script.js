@@ -70,16 +70,16 @@ const displayTransaction = function (transactions) {
   });
 };
 
-const calcDisplayBalance = function (transactions) {
-  const balance = transactions.reduce(
+const calcDisplayBalance = function (account) {
+  const balance = account.transactions.reduce(
     (acc, transaction) => acc + transaction,
     0
   );
   labelBalance.textContent = `${balance}$`;
 };
 
-const calcDisplaySummary = function (transactions, interestRate) {
-  const incomes = transactions
+const calcDisplaySummary = function (account) {
+  const incomes = account.transactions
     .filter(function (transaction) {
       return transaction > 0;
     })
@@ -87,7 +87,7 @@ const calcDisplaySummary = function (transactions, interestRate) {
       return total + transaction;
     }, 0);
   labelSumIn.textContent = `${incomes}$`;
-  const outcomes = transactions
+  const outcomes = account.transactions
     .filter(function (transaction) {
       return transaction < 0;
     })
@@ -95,12 +95,12 @@ const calcDisplaySummary = function (transactions, interestRate) {
       return total + transaction;
     }, 0);
   labelSumOut.textContent = `${Math.abs(outcomes)}$`;
-  const interest = transactions
+  const interest = account.transactions
     .filter(function (transaction) {
       return transaction > 0;
     })
     .map(function (transaction) {
-      return (transaction * interestRate) / 100;
+      return (transaction * account.interestRate) / 100;
     })
     .filter(function (transaction) {
       return transaction >= 1;
@@ -110,7 +110,11 @@ const calcDisplaySummary = function (transactions, interestRate) {
     });
   labelSumInterest.textContent = `${interest}$`;
 };
-
+const UIupdate = function (account) {
+  displayTransaction(account);
+  calcDisplayBalance(account);
+  calcDisplaySummary(account);
+};
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
     acc.username = acc.owner
@@ -132,12 +136,7 @@ btnLogin.addEventListener("click", function (e) {
     containerApp.style.opacity = 1;
     inputLoginUsername.value = inputLoginPin.value = "";
     inputLoginPin.blur();
-    displayTransaction(currentAccount.transactions);
-    calcDisplayBalance(currentAccount.transactions);
-    calcDisplaySummary(
-      currentAccount.transactions,
-      currentAccount.interestRate
-    );
+    UIupdate(currentAccount);
   }
 });
 
@@ -155,11 +154,6 @@ btnTransfer.addEventListener("click", function (e) {
   ) {
     currentAccount.transactions.push(-amount);
     receiverAccount.transactions.push(amount);
-    displayTransaction(currentAccount.transactions);
-    calcDisplayBalance(currentAccount.transactions);
-    calcDisplaySummary(
-      currentAccount.transactions,
-      currentAccount.interestRate
-    );
+    UIupdate(currentAccount);
   }
 });
