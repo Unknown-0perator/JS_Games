@@ -54,9 +54,9 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 
-const displayTransaction = function (transactions) {
+const displayTransaction = function (account) {
   containerTransactions.innerHTML = "";
-  transactions.forEach(function (transaction, index) {
+  account.transactions.forEach(function (transaction, index) {
     const type = transaction > 0 ? "deposit" : "withdrawal";
     const html = `
     <div class="transactions__row">
@@ -155,5 +155,24 @@ btnTransfer.addEventListener("click", function (e) {
     currentAccount.transactions.push(-amount);
     receiverAccount.transactions.push(amount);
     UIupdate(currentAccount);
+  }
+});
+
+btnClose.addEventListener("click", function (e) {
+  e.preventDefault();
+  if (
+    inputCloseUsername.value === currentAccount.username &&
+    Number(inputClosePin.value) === currentAccount.pin
+  ) {
+    const index = accounts.findIndex(
+      (acc) => acc.username === currentAccount.username
+    );
+
+    accounts.splice(index, 1);
+    containerApp.style.opacity = 0;
+    labelWelcome.textContent = `Log in to get started`;
+    inputClosePin = inputCloseUsername = "";
+  } else {
+    alert("Invalid Username or Password");
   }
 });
