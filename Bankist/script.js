@@ -176,3 +176,21 @@ btnClose.addEventListener("click", function (e) {
     alert("Invalid Username or Password");
   }
 });
+
+btnLoan.addEventListener("click", function (e) {
+  e.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  if (
+    amount > 0 &&
+    currentAccount.transactions.some(
+      (transaction) => transaction >= amount * 0.1
+    )
+  ) {
+    currentAccount.transactions.push(amount);
+
+    UIupdate(currentAccount);
+  } else {
+    alert("Invalid amount");
+  }
+  inputLoanAmount.value = "";
+});
