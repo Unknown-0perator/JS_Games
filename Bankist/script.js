@@ -54,9 +54,12 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 
-const displayTransaction = function (account) {
+const displayTransaction = function (account, sort = false) {
+  const transaction = sort
+    ? account.transactions.slice().sort((a, b) => a - b)
+    : account.transactions;
   containerTransactions.innerHTML = "";
-  account.transactions.forEach(function (transaction, index) {
+  transaction.forEach(function (transaction, index) {
     const type = transaction > 0 ? "deposit" : "withdrawal";
     const html = `
     <div class="transactions__row">
@@ -156,6 +159,12 @@ btnTransfer.addEventListener("click", function (e) {
     receiverAccount.transactions.push(amount);
     UIupdate(currentAccount);
   }
+});
+let sorted = false;
+btnSort.addEventListener("click", function (e) {
+  e.preventDefault();
+  displayTransaction(currentAccount, !sorted);
+  sorted = !sorted;
 });
 
 btnClose.addEventListener("click", function (e) {
