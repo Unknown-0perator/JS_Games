@@ -66,7 +66,9 @@ const displayTransaction = function (account, sort = false) {
                 <div class="transactions__type transactions__type--${type}">${
       index + 1
     } ${type}</div>
-                <div class="transactions__value">${transaction}$</div>
+                <div class="transactions__value">${transaction.toFixed(
+                  2
+                )}$</div>
             </div>
     `;
     containerTransactions.insertAdjacentHTML("afterbegin", html);
@@ -78,7 +80,7 @@ const calcDisplayBalance = function (account) {
     (acc, transaction) => acc + transaction,
     0
   );
-  labelBalance.textContent = `${balance}$`;
+  labelBalance.textContent = `${balance.toFixed(2)}$`;
 };
 
 const calcDisplaySummary = function (account) {
@@ -89,7 +91,7 @@ const calcDisplaySummary = function (account) {
     .reduce(function (total, transaction) {
       return total + transaction;
     }, 0);
-  labelSumIn.textContent = `${incomes}$`;
+  labelSumIn.textContent = `${incomes.toFixed(2)}$`;
   const outcomes = account.transactions
     .filter(function (transaction) {
       return transaction < 0;
@@ -97,7 +99,7 @@ const calcDisplaySummary = function (account) {
     .reduce(function (total, transaction) {
       return total + transaction;
     }, 0);
-  labelSumOut.textContent = `${Math.abs(outcomes)}$`;
+  labelSumOut.textContent = `${Math.abs(outcomes).toFixed(2)}$`;
   const interest = account.transactions
     .filter(function (transaction) {
       return transaction > 0;
@@ -111,7 +113,7 @@ const calcDisplaySummary = function (account) {
     .reduce(function (total, transaction) {
       return total + transaction;
     });
-  labelSumInterest.textContent = `${interest}$`;
+  labelSumInterest.textContent = `${interest.toFixed(2)}$`;
 };
 const UIupdate = function (account) {
   displayTransaction(account);
@@ -134,7 +136,7 @@ btnLogin.addEventListener("click", function (e) {
   currentAccount = accounts.find(
     (acc) => acc.username === inputLoginUsername.value
   );
-  if (currentAccount?.pin === Number(inputLoginPin.value)) {
+  if (currentAccount?.pin === +inputLoginPin.value) {
     labelWelcome.textContent = `Welcome, ${currentAccount.owner.split(" ")[0]}`;
     containerApp.style.opacity = 1;
     inputLoginUsername.value = inputLoginPin.value = "";
@@ -145,7 +147,7 @@ btnLogin.addEventListener("click", function (e) {
 
 btnTransfer.addEventListener("click", function (e) {
   e.preventDefault();
-  const amount = Number(inputTransferAmount.value);
+  const amount = +inputTransferAmount.value;
   const receiverAccount = accounts.find(
     (acc) => acc.username === inputTransferTo.value
   );
@@ -171,7 +173,7 @@ btnClose.addEventListener("click", function (e) {
   e.preventDefault();
   if (
     inputCloseUsername.value === currentAccount.username &&
-    Number(inputClosePin.value) === currentAccount.pin
+    +inputClosePin.value === currentAccount.pin
   ) {
     const index = accounts.findIndex(
       (acc) => acc.username === currentAccount.username
@@ -188,7 +190,7 @@ btnClose.addEventListener("click", function (e) {
 
 btnLoan.addEventListener("click", function (e) {
   e.preventDefault();
-  const amount = Number(inputLoanAmount.value);
+  const amount = +inputLoanAmount.value;
   if (
     amount > 0 &&
     currentAccount.transactions.some(
