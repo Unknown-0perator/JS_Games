@@ -29,6 +29,16 @@ const account1 = {
   transactions: [100, 200, -900, -3000, 1650, -1403, 4070, 107],
   interestRate: 12,
   pin: 1234,
+  transactionsDates: [
+    "2019-11-18T21:31:17.178Z",
+    "2019-12-23T07:42:02.383Z",
+    "2020-01-28T09:15:04.904Z",
+    "2020-04-01T10:17:24.185Z",
+    "2020-05-08T14:11:59.604Z",
+    "2020-05-27T17:01:17.194Z",
+    "2020-07-11T23:36:17.929Z",
+    "2020-07-12T10:51:36.790Z",
+  ],
 };
 
 const account2 = {
@@ -36,6 +46,16 @@ const account2 = {
   transactions: [550, 370, -190, -690, -4321, -7000, 10500, -3900],
   interestRate: 7.5,
   pin: 1224,
+  transactionsDates: [
+    "2019-11-18T21:31:17.178Z",
+    "2019-12-23T07:42:02.383Z",
+    "2020-01-28T09:15:04.904Z",
+    "2020-04-01T10:17:24.185Z",
+    "2020-05-08T14:11:59.604Z",
+    "2020-05-27T17:01:17.194Z",
+    "2020-07-11T23:36:17.929Z",
+    "2020-07-12T10:51:36.790Z",
+  ],
 };
 
 const account3 = {
@@ -43,6 +63,16 @@ const account3 = {
   transactions: [490, -700, -3200, 4109, -2035, 9850, 4000, -4860],
   interestRate: 1.8,
   pin: 1199,
+  transactionsDates: [
+    "2019-11-18T21:31:17.178Z",
+    "2019-12-23T07:42:02.383Z",
+    "2020-01-28T09:15:04.904Z",
+    "2020-04-01T10:17:24.185Z",
+    "2020-05-08T14:11:59.604Z",
+    "2020-05-27T17:01:17.194Z",
+    "2020-07-11T23:36:17.929Z",
+    "2020-07-12T10:51:36.790Z",
+  ],
 };
 
 const account4 = {
@@ -50,6 +80,13 @@ const account4 = {
   transactions: [620, -1600, 980, 1205, 930],
   interestRate: 1.7,
   pin: 7890,
+  transactionsDates: [
+    "2019-11-18T21:31:17.178Z",
+    "2019-12-23T07:42:02.383Z",
+    "2020-01-28T09:15:04.904Z",
+    "2020-04-01T10:17:24.185Z",
+    "2020-05-08T14:11:59.604Z",
+  ],
 };
 
 const accounts = [account1, account2, account3, account4];
@@ -61,11 +98,17 @@ const displayTransaction = function (account, sort = false) {
   containerTransactions.innerHTML = "";
   transaction.forEach(function (transaction, index) {
     const type = transaction > 0 ? "deposit" : "withdrawal";
+    const date = new Date(account.transactionsDates[index]);
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, 0);
+    const day = `${date.getDate()}`.padStart(2, 0);
+    const displayDates = `${day}-${month}-${year}`;
     const html = `
     <div class="transactions__row">
                 <div class="transactions__type transactions__type--${type}">${
       index + 1
     } ${type}</div>
+    <div class="transactions__date">${displayDates}</div>
                 <div class="transactions__value">${transaction.toFixed(
                   2
                 )}$</div>
@@ -159,6 +202,8 @@ btnTransfer.addEventListener("click", function (e) {
   ) {
     currentAccount.transactions.push(-amount);
     receiverAccount.transactions.push(amount);
+    currentAccount.transactionsDates.push(new Date().toISOString());
+    receiverAccount.transactionsDates.push(new Date().toISOString());
     UIupdate(currentAccount);
   }
 });
@@ -198,6 +243,7 @@ btnLoan.addEventListener("click", function (e) {
     )
   ) {
     currentAccount.transactions.push(amount);
+    currentAccount.transactionsDates.push(new Date().toISOString());
 
     UIupdate(currentAccount);
   } else {
@@ -205,3 +251,11 @@ btnLoan.addEventListener("click", function (e) {
   }
   inputLoanAmount.value = "";
 });
+
+const now = new Date();
+const year = now.getFullYear();
+const month = `${now.getMonth() + 1}`.padStart(2, 0);
+const day = `${now.getDate()}`.padStart(2, 0);
+const hour = `${now.getHours()}`.padStart(2, 0);
+const minute = `${now.getMinutes()}`.padStart(2.0);
+labelDate.textContent = `${day}-${month}-${year}, ${hour}:${minute}`;
