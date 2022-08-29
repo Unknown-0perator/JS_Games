@@ -47,7 +47,7 @@ const account2 = {
   interestRate: 7.5,
   pin: 1224,
   transactionsDates: [
-    "2019-11-18T21:31:17.178Z",
+    "2022-08-25T21:31:17.178Z",
     "2019-12-23T07:42:02.383Z",
     "2020-01-28T09:15:04.904Z",
     "2020-04-01T10:17:24.185Z",
@@ -91,6 +91,19 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 
+const displayTransactionsDate = function (date) {
+  const calcDaysPassed = (date1, date2) =>
+    Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
+  const daysPassed = calcDaysPassed(new Date(), date);
+  if (daysPassed === 0) return "Today";
+  if (daysPassed === 1) return "Yesterday";
+  if (daysPassed <= 7) return `${daysPassed} Ago`;
+  const year = date.getFullYear();
+  const month = `${date.getMonth() + 1}`.padStart(2, 0);
+  const day = `${date.getDate()}`.padStart(2, 0);
+  return `${day}-${month}-${year}`;
+};
+
 const displayTransaction = function (account, sort = false) {
   const transaction = sort
     ? account.transactions.slice().sort((a, b) => a - b)
@@ -99,16 +112,13 @@ const displayTransaction = function (account, sort = false) {
   transaction.forEach(function (transaction, index) {
     const type = transaction > 0 ? "deposit" : "withdrawal";
     const date = new Date(account.transactionsDates[index]);
-    const year = date.getFullYear();
-    const month = `${date.getMonth() + 1}`.padStart(2, 0);
-    const day = `${date.getDate()}`.padStart(2, 0);
-    const displayDates = `${day}-${month}-${year}`;
+
     const html = `
     <div class="transactions__row">
                 <div class="transactions__type transactions__type--${type}">${
       index + 1
     } ${type}</div>
-    <div class="transactions__date">${displayDates}</div>
+    <div class="transactions__date">${displayTransactionsDate(date)}</div>
                 <div class="transactions__value">${transaction.toFixed(
                   2
                 )}$</div>
@@ -116,6 +126,19 @@ const displayTransaction = function (account, sort = false) {
     `;
     containerTransactions.insertAdjacentHTML("afterbegin", html);
   });
+};
+
+const displayCurrentDate = function () {
+  const local = navigator.language;
+  const now = new Date();
+  const options = {
+    hour: "numeric",
+    minute: "numeric",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  };
+  labelDate.textContent = new Intl.DateTimeFormat(local, options).format(now);
 };
 
 const calcDisplayBalance = function (account) {
@@ -162,6 +185,7 @@ const UIupdate = function (account) {
   displayTransaction(account);
   calcDisplayBalance(account);
   calcDisplaySummary(account);
+  displayCurrentDate();
 };
 const createUsernames = function (accs) {
   accs.forEach(function (acc) {
@@ -251,11 +275,3 @@ btnLoan.addEventListener("click", function (e) {
   }
   inputLoanAmount.value = "";
 });
-
-const now = new Date();
-const year = now.getFullYear();
-const month = `${now.getMonth() + 1}`.padStart(2, 0);
-const day = `${now.getDate()}`.padStart(2, 0);
-const hour = `${now.getHours()}`.padStart(2, 0);
-const minute = `${now.getMinutes()}`.padStart(2.0);
-labelDate.textContent = `${day}-${month}-${year}, ${hour}:${minute}`;
