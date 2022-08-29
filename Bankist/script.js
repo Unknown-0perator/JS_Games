@@ -91,6 +91,25 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 
+let timer;
+
+const setLogOutTimer = function () {
+  const tick = function () {
+    const min = String(Math.trunc(time / 60)).padStart(2, 0);
+    const sec = String(time % 60).padStart(2, 0);
+    labelTimer.textContent = `${min}:${sec}`;
+    if (time === 0) {
+      labelWelcome.textContent = `Log in to get started`;
+      containerApp.style.opacity = 0;
+    }
+    time--;
+  };
+  let time = 20;
+  tick();
+  const timer = setInterval(tick, 1000);
+  return timer;
+};
+
 const formattedCurrency = function (value) {
   return Intl.NumberFormat(navigator.language, {
     style: "currency",
@@ -190,6 +209,8 @@ const calcDisplaySummary = function (account) {
   labelSumInterest.textContent = `${formattedCurrency(interest)}`;
 };
 const UIupdate = function (account) {
+  if (timer) clearInterval(timer);
+  timer = setLogOutTimer();
   displayTransaction(account);
   calcDisplayBalance(account);
   calcDisplaySummary(account);
@@ -216,6 +237,7 @@ btnLogin.addEventListener("click", function (e) {
     containerApp.style.opacity = 1;
     inputLoginUsername.value = inputLoginPin.value = "";
     inputLoginPin.blur();
+
     UIupdate(currentAccount);
   }
 });
@@ -236,6 +258,7 @@ btnTransfer.addEventListener("click", function (e) {
     receiverAccount.transactions.push(amount);
     currentAccount.transactionsDates.push(new Date().toISOString());
     receiverAccount.transactionsDates.push(new Date().toISOString());
+
     UIupdate(currentAccount);
   }
 });
