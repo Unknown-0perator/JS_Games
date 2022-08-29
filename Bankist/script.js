@@ -91,17 +91,25 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 
+const formattedCurrency = function (value) {
+  return Intl.NumberFormat(navigator.language, {
+    style: "currency",
+    currency: "CAD",
+  }).format(value);
+};
+
 const displayTransactionsDate = function (date) {
   const calcDaysPassed = (date1, date2) =>
     Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
   const daysPassed = calcDaysPassed(new Date(), date);
   if (daysPassed === 0) return "Today";
   if (daysPassed === 1) return "Yesterday";
-  if (daysPassed <= 7) return `${daysPassed} Ago`;
-  const year = date.getFullYear();
-  const month = `${date.getMonth() + 1}`.padStart(2, 0);
-  const day = `${date.getDate()}`.padStart(2, 0);
-  return `${day}-${month}-${year}`;
+  if (daysPassed <= 7) return `${daysPassed} days ago`;
+  return Intl.DateTimeFormat(navigator.language, {
+    year: "numeric",
+    month: "2-digit",
+    day: "numeric",
+  }).format(date);
 };
 
 const displayTransaction = function (account, sort = false) {
@@ -119,9 +127,9 @@ const displayTransaction = function (account, sort = false) {
       index + 1
     } ${type}</div>
     <div class="transactions__date">${displayTransactionsDate(date)}</div>
-                <div class="transactions__value">${transaction.toFixed(
-                  2
-                )}$</div>
+                <div class="transactions__value">${formattedCurrency(
+                  transaction
+                )}</div>
             </div>
     `;
     containerTransactions.insertAdjacentHTML("afterbegin", html);
@@ -146,7 +154,7 @@ const calcDisplayBalance = function (account) {
     (acc, transaction) => acc + transaction,
     0
   );
-  labelBalance.textContent = `${balance.toFixed(2)}$`;
+  labelBalance.textContent = `${formattedCurrency(balance)}`;
 };
 
 const calcDisplaySummary = function (account) {
@@ -157,7 +165,7 @@ const calcDisplaySummary = function (account) {
     .reduce(function (total, transaction) {
       return total + transaction;
     }, 0);
-  labelSumIn.textContent = `${incomes.toFixed(2)}$`;
+  labelSumIn.textContent = `${formattedCurrency(incomes)}`;
   const outcomes = account.transactions
     .filter(function (transaction) {
       return transaction < 0;
@@ -165,7 +173,7 @@ const calcDisplaySummary = function (account) {
     .reduce(function (total, transaction) {
       return total + transaction;
     }, 0);
-  labelSumOut.textContent = `${Math.abs(outcomes).toFixed(2)}$`;
+  labelSumOut.textContent = `${formattedCurrency(Math.abs(outcomes))}`;
   const interest = account.transactions
     .filter(function (transaction) {
       return transaction > 0;
@@ -179,7 +187,7 @@ const calcDisplaySummary = function (account) {
     .reduce(function (total, transaction) {
       return total + transaction;
     });
-  labelSumInterest.textContent = `${interest.toFixed(2)}$`;
+  labelSumInterest.textContent = `${formattedCurrency(interest)}`;
 };
 const UIupdate = function (account) {
   displayTransaction(account);
