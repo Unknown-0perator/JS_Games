@@ -38,7 +38,12 @@ document
   .addEventListener("click", function () {
     message.remove();
   });
-
-message.style.backgroundColor = "#37383d";
 message.style.height =
   Number.parseFloat(getComputedStyle(message).height, 10) + 30 + "px";
+
+const btnScrollTo = document.querySelector(".btn--text");
+const section1 = document.querySelector("#section--1");
+
+btnScrollTo.addEventListener("click", function (e) {
+  section1.scrollIntoView({ behavior: "smooth" });
+});
