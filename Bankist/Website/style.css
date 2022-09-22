@@ -485,6 +485,10 @@ img {
   font-size: 1.5rem;
 }
 
+.section--hidden {
+  opacity: 0;
+  transform: translate(8rem);
+}
 .section__title--testimonials {
   margin-bottom: 4rem;
 }
