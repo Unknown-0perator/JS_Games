@@ -106,7 +106,6 @@ nav.addEventListener("mouseout", handleHover.bind(1));
 
 const stickyNav = function (entries) {
   const [entry] = entries;
-  console.log(entry);
   if (!entry.isIntersecting) nav.classList.add("sticky");
   else nav.classList.remove("sticky");
 };
@@ -152,3 +151,35 @@ const imageObserver = new IntersectionObserver(loadImg, {
   rootMargin: "200px",
 });
 imageTargets.forEach((img) => imageObserver.observe(img));
+
+const slides = document.querySelectorAll(".slide");
+
+const btnRight = document.querySelector(".slider__btn--right");
+const btnLeft = document.querySelector(".slider__btn--left");
+const goToSlide = function (slide) {
+  slides.forEach(
+    (s, i) => (s.style.transform = `translateX(${100 * (i - slide)}%)`)
+  );
+};
+let currentSlide = 0;
+let maxSlide = slides.length;
+
+goToSlide(0);
+const nextSlide = function () {
+  if (currentSlide === maxSlide - 1) {
+    currentSlide = 0;
+  } else {
+    currentSlide++;
+  }
+  goToSlide(currentSlide);
+};
+const perviousSlide = function () {
+  if (currentSlide === 0) {
+    currentSlide = maxSlide - 1;
+  } else {
+    currentSlide--;
+  }
+  goToSlide(currentSlide);
+};
+btnRight.addEventListener("click", nextSlide);
+btnLeft.addEventListener("click", perviousSlide);
