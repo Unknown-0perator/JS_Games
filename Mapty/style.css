@@ -27,13 +27,45 @@ a:visited {
   display: flex;
   flex-direction: column;
   padding: 5rem;
-  flex-basis: 30rem;
+  flex-basis: 50rem;
 }
 
 .logo {
   height: 5.2rem;
   align-self: center;
   margin-bottom: 4rem;
+}
+.form {
+  background-color: black;
+  border-radius: 5px;
+  color: white;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 2.5rem;
+}
+.form__row {
+  display: flex;
+  align-items: center;
+}
+.form__row--hidden {
+  display: none;
+}
+.form__label {
+  flex: 0 0 50%;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.form__input {
+  width: 100%;
+  padding: 0.3rem 1.1rem;
+  font-family: inherit;
+  font-size: 1.4rem;
+  border: none;
+  border-radius: 3px;
+}
+.form__btn {
+  display: none;
 }
 
 .copyright {

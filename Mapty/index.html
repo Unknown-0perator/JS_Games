@@ -14,31 +14,31 @@
     <div class="sidebar">
         <img src="logo.png" alt="Mapty Logo" class="logo">
         <ul>
-            <form>
-                <div>
-                    <label>Type</label>
-                    <select>
+            <form class="form">
+                <div class="form__row">
+                    <label class="form__label">Type</label>
+                    <select class="form__input">
                         <option value="running">Running</option>
                         <option value="cycling">Cycling</option>
                     </select>
                 </div>
-                <div>
-                    <label>Distance</label>
-                    <input />
+                <div class="form__row">
+                    <label class="form__label">Distance</label>
+                    <input class="form__input" />
                 </div>
-                <div>
-                    <label>Duration</label>
-                    <input />
+                <div class="form__row">
+                    <label class="form__label">Duration</label>
+                    <input class="form__input" />
                 </div>
-                <div>
-                    <label>Cadence</label>
-                    <input />
+                <div class="form__row">
+                    <label class="form__label">Cadence</label>
+                    <input class="form__input" />
                 </div>
-                <div>
-                    <label>Elev Gain</label>
-                    <input />
+                <div class="form__row form__row--hidden">
+                    <label class="form__label">Elev Gain</label>
+                    <input class="form__input" />
                 </div>
-                <button>OK</button>
+                <button class="form__btn">OK</button>
             </form>
         </ul>
         <p class="copyright">
