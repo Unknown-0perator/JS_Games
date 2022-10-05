@@ -34,6 +34,7 @@ class Workout {
 }
 
 class Running extends Workout {
+  type = "running";
   constructor(coord, distnce, duration, cadence) {
     super(coord, distnce, duration);
     this.cadence = cadence;
@@ -44,6 +45,7 @@ class Running extends Workout {
   }
 }
 class Cycling extends Workout {
+  type = "cycling";
   constructor(coord, distnce, duration, elevationGain) {
     super(coord, distnce, duration);
     this.elevationGain = elevationGain;
@@ -57,6 +59,7 @@ class Cycling extends Workout {
 class App {
   #map;
   #mapEvent;
+  #workouts = [];
   constructor() {
     this._getPosition();
 
@@ -102,14 +105,55 @@ class App {
   }
 
   _newWorkout(e) {
+    const validInputs = (...inputs) =>
+      inputs.every((inp) => Number.isFinite(inp));
+    const isPostiveNumber = (...inputs) =>
+      inputs.every((inp) => Number(inp) >= 0);
     e.preventDefault();
+
+    const type = inputType.value;
+    const distance = +inputDistance.value;
+    const duration = +inputDuration.value;
+    let workout;
+
+    if (type === "running") {
+      const cadence = +inputCadence.value;
+      if (
+        !validInputs(distance, duration, cadence) ||
+        !isPostiveNumber(distance, duration, cadence)
+      ) {
+        return alert("Inputs have to be positive numbers!");
+      }
+      workout = new Running(this.#mapEvent.latlng, distance, duration, cadence);
+    }
+    if (type === "cycling") {
+      const elevation = +inputElevation.value;
+      if (
+        !validInputs(distance, duration, elevation) ||
+        !isPostiveNumber(distance, duration, elevation)
+      ) {
+        return alert("Inputs have to be positive numbers!");
+      }
+      workout = new Cycling(
+        this.#mapEvent.latlng,
+        distance,
+        duration,
+        elevation
+      );
+    }
+
+    this.#workouts.push(workout);
+    console.log(workout);
+
+    this.renderWorkoutMarker(workout);
 
     inputDistance.value =
       inputCadence.value =
       inputDuration.value =
       inputElevation.value =
         "";
-
+  }
+  renderWorkoutMarker(workout) {
     L.marker(this.#mapEvent.latlng)
       .addTo(this.#map)
       .bindPopup(
@@ -118,9 +162,10 @@ class App {
           minWidth: 100,
           autoClose: false,
           closeOnClick: false,
-          className: "running-popup",
+          className: `${workout.type}-popup`,
         })
       )
+
       .setPopupContent("workout")
       .openPopup();
   }
