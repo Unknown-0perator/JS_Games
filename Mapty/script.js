@@ -71,6 +71,8 @@ class App {
   constructor() {
     this._getPosition();
 
+    this._getLocalStorage();
+
     form.addEventListener("submit", this._newWorkout.bind(this));
 
     inputType.addEventListener("change", this._toggleElevationField);
@@ -90,8 +92,9 @@ class App {
   }
 
   _loadMap(position) {
-    const latitude = position.coords.latitude;
-    const longitude = position.coords.longitude;
+    const { latitude } = position.coords;
+    const { longitude } = position.coords;
+
     const coord = [latitude, longitude];
     this.#map = L.map("map").setView(coord, this.#mapZoomLevel);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -101,6 +104,10 @@ class App {
     }).addTo(this.#map);
     L.marker(coord).addTo(this.#map).bindPopup("Your location").openPopup();
     this.#map.on("click", this._showForm.bind(this));
+
+    this.#workouts.forEach((work) => {
+      this._renderWorkoutMarker(work);
+    });
   }
 
   _showForm(mapE) {
@@ -132,6 +139,7 @@ class App {
     e.preventDefault();
 
     const type = inputType.value;
+    const { lat, lng } = this.#mapEvent.latlng;
     const distance = +inputDistance.value;
     const duration = +inputDuration.value;
     let workout;
@@ -144,7 +152,7 @@ class App {
       ) {
         return alert("Inputs have to be positive numbers!");
       }
-      workout = new Running(this.#mapEvent.latlng, distance, duration, cadence);
+      workout = new Running([lat, lng], distance, duration, cadence);
     }
     if (type === "cycling") {
       const elevation = +inputElevation.value;
@@ -154,25 +162,21 @@ class App {
       ) {
         return alert("Inputs have to be positive numbers!");
       }
-      workout = new Cycling(
-        this.#mapEvent.latlng,
-        distance,
-        duration,
-        elevation
-      );
+      workout = new Cycling([lat, lng], distance, duration, elevation);
     }
 
     this.#workouts.push(workout);
-    console.log(workout);
 
     this._renderWorkoutMarker(workout);
 
     this._renderWorkout(workout);
 
     this._hideForm();
+
+    this._setLocalStorage();
   }
   _renderWorkoutMarker(workout) {
-    L.marker(this.#mapEvent.latlng)
+    L.marker(workout.coord)
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -238,20 +242,33 @@ class App {
 
   _moveToPopup(e) {
     const workoutEl = e.target.closest(".workout");
-    console.log(workoutEl);
 
     if (!workoutEl) return;
 
     const workout = this.#workouts.find(
       (work) => work.id === workoutEl.dataset.id
     );
-    console.log(workout);
 
     this.#map.setView(workout.coord, this.#mapZoomLevel, {
       animate: true,
       pan: {
         duration: 1,
       },
+    });
+  }
+  _setLocalStorage() {
+    localStorage.setItem("workouts", JSON.stringify(this.#workouts));
+  }
+  _getLocalStorage() {
+    const data = JSON.parse(localStorage.getItem("workouts"));
+    console.log(data);
+
+    if (!data) return;
+
+    this.#workouts = data;
+
+    this.#workouts.forEach((work) => {
+      this._renderWorkout(work);
     });
   }
 }
