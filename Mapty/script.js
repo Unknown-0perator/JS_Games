@@ -68,6 +68,10 @@ class App {
   #mapZoomLevel = 15;
   #mapEvent;
   #workouts = [];
+  #icon = L.icon({
+    iconUrl: "icon.png",
+    iconSize: [60, 60],
+  });
   constructor() {
     this._getPosition();
 
@@ -102,7 +106,12 @@ class App {
       attribution:
         '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
     }).addTo(this.#map);
-    L.marker(coord).addTo(this.#map).bindPopup("Your location").openPopup();
+    // L.marker(coord, {
+    //   icon: this.#icon,
+    // })
+    //   .addTo(this.#map)
+    //   .bindPopup("Your location")
+    //   .openPopup();
     this.#map.on("click", this._showForm.bind(this));
 
     this.#workouts.forEach((work) => {
@@ -150,7 +159,8 @@ class App {
         !validInputs(distance, duration, cadence) ||
         !isPostiveNumber(distance, duration, cadence)
       ) {
-        return alert("Inputs have to be positive numbers!");
+        return (document.querySelector(".validation__msg").style.overflow =
+          "visible");
       }
       workout = new Running([lat, lng], distance, duration, cadence);
     }
@@ -176,7 +186,9 @@ class App {
     this._setLocalStorage();
   }
   _renderWorkoutMarker(workout) {
-    L.marker(workout.coord)
+    L.marker(workout.coord, {
+      icon: this.#icon,
+    })
       .addTo(this.#map)
       .bindPopup(
         L.popup({
@@ -261,7 +273,6 @@ class App {
   }
   _getLocalStorage() {
     const data = JSON.parse(localStorage.getItem("workouts"));
-    console.log(data);
 
     if (!data) return;
 

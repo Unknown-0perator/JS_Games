@@ -218,3 +218,12 @@ a:visited {
 .cycling-popup .leaflet-popup-content-wrapper {
   border-left: 5px solid var(--color-brand--1);
 }
+
+.validation__msg {
+  font-size: 1.5rem;
+  transition: all 0.7s;
+  overflow: hidden;
+  height: 0;
+  color: red;
+  text-align: center;
+}
