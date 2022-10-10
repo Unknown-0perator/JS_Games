@@ -24,6 +24,8 @@ const renderCountry = function (data, className = "") {
   countriesContainer.style.opacity = 1;
 };
 
+// Using XMLHttpRequest method
+
 const countryAndNeighbourInfo = function (country) {
   // AJAX call country 1
   const request = new XMLHttpRequest();
@@ -36,7 +38,7 @@ const countryAndNeighbourInfo = function (country) {
     renderCountry(data);
     const [neighbour] = data.borders;
     if (!neighbour) return;
-
+    // AJAX call country 2
     const request2 = new XMLHttpRequest();
     request2.open("GET", `https://restcountries.com/v3.1/alpha/${neighbour}`);
     request2.send();
@@ -49,4 +51,12 @@ const countryAndNeighbourInfo = function (country) {
   });
 };
 
-countryAndNeighbourInfo("canada");
+// Using fetch method
+
+const getCountryData = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then((response) => response.json())
+    .then((data) => renderCountry(data[0]));
+};
+
+getCountryData("canada");
