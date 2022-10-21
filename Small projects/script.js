@@ -24,39 +24,48 @@ const renderCountry = function (data, className = "") {
   countriesContainer.style.opacity = 1;
 };
 
-// Using XMLHttpRequest method
+// // Using XMLHttpRequest method
 
-const countryAndNeighbourInfo = function (country) {
-  // AJAX call country 1
-  const request = new XMLHttpRequest();
-  request.open("GET", `https://restcountries.com/v3.1/name/${country}`);
-  request.send();
+// const countryAndNeighbourInfo = function (country) {
+//   // AJAX call country 1
+//   const request = new XMLHttpRequest();
+//   request.open("GET", `https://restcountries.com/v3.1/name/${country}`);
+//   request.send();
 
-  request.addEventListener("load", function () {
-    const [data] = JSON.parse(this.responseText);
-    console.log(data);
-    renderCountry(data);
-    const [neighbour] = data.borders;
-    if (!neighbour) return;
-    // AJAX call country 2
-    const request2 = new XMLHttpRequest();
-    request2.open("GET", `https://restcountries.com/v3.1/alpha/${neighbour}`);
-    request2.send();
+//   request.addEventListener("load", function () {
+//     const [data] = JSON.parse(this.responseText);
+//     console.log(data);
+//     renderCountry(data);
+//     const [neighbour] = data.borders;
+//     if (!neighbour) return;
+//     // AJAX call country 2
+//     const request2 = new XMLHttpRequest();
+//     request2.open("GET", `https://restcountries.com/v3.1/alpha/${neighbour}`);
+//     request2.send();
 
-    request2.addEventListener("load", function () {
-      const [data2] = JSON.parse(this.responseText);
-      console.log(data2);
-      renderCountry(data2, "neighbour");
-    });
-  });
-};
+//     request2.addEventListener("load", function () {
+//       const [data2] = JSON.parse(this.responseText);
+//       console.log(data2);
+//       renderCountry(data2, "neighbour");
+//     });
+//   });
+// };
 
 // Using fetch method
 
 const getCountryData = function (country) {
   fetch(`https://restcountries.com/v3.1/name/${country}`)
     .then((response) => response.json())
-    .then((data) => renderCountry(data[0]));
-};
+    .then((data) => {
+      renderCountry(data[0]);
+      const neighbour = data[0].borders[0];
+      console.log(neighbour);
 
-getCountryData("canada");
+      if (!neighbour) return;
+
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbour}`);
+    })
+    .then((response) => response.json())
+    .then((data) => renderCountry(data[0], "neighbour"));
+};
+getCountryData("Canada");
