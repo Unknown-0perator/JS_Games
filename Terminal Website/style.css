@@ -31,10 +31,31 @@ textarea {
   overflow: hidden;
   display: inline-block;
   text-decoration: blink;
+  transform: translateY(0.5rem);
   animation: blinking 1s linear infinite;
 }
 @keyframes blinking {
   50% {
     opacity: 0;
+  }
+}
+
+#liner {
+  font-size: 1.5rem;
+  line-height: 1.3em;
+  animation: show 0.5s ease forwards;
+  animation-delay: 1s;
+  opacity: 0;
+}
+#liner::before {
+  color: #00ff00;
+  content: "Unknown-0perator";
+}
+@keyframes show {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
