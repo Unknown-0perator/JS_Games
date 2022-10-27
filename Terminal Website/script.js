@@ -1,6 +1,12 @@
+const liner = document.getElementById("liner");
+const command = document.getElementById("typer");
+const textarea = document.getElementById("textarea");
+const terminal = document.getElementById("terminal");
+
 const linkedin = "https://www.linkedin.com/in/ahmadrashidakhtar/";
 const github = "https://github.com/Unknown-0perator";
 
+//Commands
 about = [
   "<br>",
   "Hello World, I am Ahmad Rashid Akhtar",
