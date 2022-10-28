@@ -1,42 +1,12 @@
-function $(elid) {
-  return document.getElementById(elid);
-}
-
-let cursor;
-window.onload = init;
-
-function init() {
-  cursor = $("cursor");
-  cursor.style.left = "0px";
-}
-
-function nl2br(txt) {
-  return txt.replace(/\n/g, "");
-}
-
-function typeIt(from, e) {
-  e = e || window.event;
-  let w = $("typer");
-  let tw = from.value;
-  if (!pw) {
-    w.innerHTML = nl2br(tw);
-  }
-}
-
-function moveIt(count, e) {
-  e = e || window.event;
-  let keycode = e.keyCode || e.which;
-  if (keycode == 37 && parseInt(cursor.style.left) >= 0 - (count - 1) * 10) {
-    cursor.style.left = parseInt(cursor.style.left) - 10 + "px";
-  } else if (keycode == 39 && parseInt(cursor.style.left) + 10 <= 0) {
-    cursor.style.left = parseInt(cursor.style.left) + 10 + "px";
-  }
-}
-
-function alert(txt) {
-  console.log(txt);
-}
-
+let before = document.getElementById("before");
+const liner = document.getElementById("liner");
+const command = document.getElementById("typer");
+const textarea = document.getElementById("texter");
+const terminal = document.getElementById("terminal");
+let cursor = document.getElementById("cursor");
+let git = 0;
+let pw = false;
+let commands = [];
 let linkedin = "https://www.linkedin.com/in/ahmadrashidakhtar/";
 let github = "https://github.com/Unknown-0perator/";
 
@@ -80,21 +50,40 @@ help = [
   "<br>",
 ];
 
-let before = document.getElementById("before");
-const liner = document.getElementById("liner");
-const command = document.getElementById("typer");
-const textarea = document.getElementById("texter");
-const terminal = document.getElementById("terminal");
-
-let git = 0;
-let pw = false;
-let commands = [];
-
-window.addEventListener("keyup", enterKey);
-
 //init
 textarea.value = "";
 command.innerHTML = textarea.value;
+
+window.onload = init;
+
+function init() {
+  cursor.style.left = "0px";
+}
+
+function nl2br(txt) {
+  return txt.replace(/\n/g, "");
+}
+
+function typeIt(from, e) {
+  e = e || window.event;
+  let w = command;
+  let tw = from.value;
+  if (!pw) {
+    w.innerHTML = nl2br(tw);
+  }
+}
+
+function moveIt(count, e) {
+  e = e || window.event;
+  let keycode = e.keyCode || e.which;
+  if (keycode == 37 && parseInt(cursor.style.left) >= 0 - (count - 1) * 10) {
+    cursor.style.left = parseInt(cursor.style.left) - 10 + "px";
+  } else if (keycode == 39 && parseInt(cursor.style.left) + 10 <= 0) {
+    cursor.style.left = parseInt(cursor.style.left) + 10 + "px";
+  }
+}
+
+window.addEventListener("keyup", enterKey);
 
 function enterKey(e) {
   if (e.keyCode == 181) {
